@@ -1,11 +1,11 @@
 //
-// Created by ç‹é•‡ä¸œ on 2024/10/22.
+// Created by ÍõÕò¶« on 2024/10/22.
 //
 
 #include "S_AES.h"
 
 vector<int> S_AES::substituteNibble(vector<int> state) {
-    // æ£€æŸ¥ state çš„é•¿åº¦æ˜¯å¦æ˜¯4çš„å€æ•°
+    // ¼ì²é state µÄ³¤¶ÈÊÇ·ñÊÇ4µÄ±¶Êı
     if (state.size() % 4 != 0) {
         cerr << "State size must be a multiple of 4." << endl;
         return {};
@@ -14,11 +14,11 @@ vector<int> S_AES::substituteNibble(vector<int> state) {
     vector<int> result;
     result.reserve(state.size());
 
-    // æŒ‰æ¯å››ä¸ªä½åˆ†ä¸ºä¸€ç»„è¿›è¡Œæ›¿æ¢
+    // °´Ã¿ËÄ¸öÎ»·ÖÎªÒ»×é½øĞĞÌæ»»
     for (size_t i = 0; i < state.size(); i += 4) {
         int row1 = state[i] * 2 + state[i + 1];
         int col1 = state[i + 2] * 2 + state[i + 3];
-        vector<int> nibble = hexToBinary(sbox[row1][col1]);
+        vector<int> nibble = hexToBinary(sbox[row1][col1], 4);
         result.insert(result.end(), nibble.begin(), nibble.end());
     }
 
@@ -26,7 +26,7 @@ vector<int> S_AES::substituteNibble(vector<int> state) {
 }
 
 vector<int> S_AES::inverseSubstituteNibble(vector<int>state) {
-    // æ£€æŸ¥ state çš„é•¿åº¦æ˜¯å¦æ˜¯4çš„å€æ•°
+    // ¼ì²é state µÄ³¤¶ÈÊÇ·ñÊÇ4µÄ±¶Êı
     if (state.size() % 4 != 0) {
         cerr << "State size must be a multiple of 4." << endl;
         return {};
@@ -35,11 +35,11 @@ vector<int> S_AES::inverseSubstituteNibble(vector<int>state) {
     vector<int> result;
     result.reserve(state.size());
 
-    // æŒ‰æ¯å››ä¸ªä½åˆ†ä¸ºä¸€ç»„è¿›è¡Œæ›¿æ¢
+    // °´Ã¿ËÄ¸öÎ»·ÖÎªÒ»×é½øĞĞÌæ»»
     for (size_t i = 0; i < state.size(); i += 4) {
         int row1 = state[i] * 2 + state[i + 1];
         int col1 = state[i + 2] * 2 + state[i + 3];
-        vector<int> nibble = hexToBinary(invSbox[row1][col1]);
+        vector<int> nibble = hexToBinary(invSbox[row1][col1], 4);
         result.insert(result.end(), nibble.begin(), nibble.end());
     }
 
@@ -136,12 +136,12 @@ vector<int> S_AES::RotNib(vector<int> state) {
 
 vector<vector<int>> S_AES::keyExpansion(vector<int> key) {
     vector<vector<int>> w(6, vector<int>(8, 0));
-    //å°†è¾“å…¥ key çš„å‰8ä½å­˜å‚¨åœ¨ w[0] ä¸­
+    //½«ÊäÈë key µÄÇ°8Î»´æ´¢ÔÚ w[0] ÖĞ
     for (int i = 0; i < 8; i++) {
         w[0][i] = key[i];
     }
 
-    // å°†è¾“å…¥ key çš„å8ä½å­˜å‚¨åœ¨ w[1] ä¸­
+    // ½«ÊäÈë key µÄºó8Î»´æ´¢ÔÚ w[1] ÖĞ
     for (int i = 8; i < 16; ++i) {
         w[1][i - 8] = key[i];
     }
@@ -190,45 +190,45 @@ vector<int> S_AES::encrypt(vector<int> plaintext, vector<int> key) {
     vector<vector<int>>Key;
 
     Key = keyExpansion(key);
-    // åˆå§‹è½®å¯†é’¥åŠ 
-    //cout << "å¯†é’¥0ï¼š";
+    // ³õÊ¼ÂÖÃÜÔ¿¼Ó
+    //cout << "ÃÜÔ¿0£º";
     //printVector(Key[0]);
     for (int i = 0; i < 16; i++) {
         state[i] ^= Key[0][i];
     }
-    //cout << "åˆå§‹è½®å¯†é’¥åŠ :";
+    //cout << "³õÊ¼ÂÖÃÜÔ¿¼Ó:";
     //printVector(state);
-    // ç¬¬ä¸€è½®
+    // µÚÒ»ÂÖ
     state = substituteNibble(state);
-    //cout << "åŠå­—èŠ‚æ›¿æ¢ï¼š";
+    //cout << "°ë×Ö½ÚÌæ»»£º";
     //printVector(state);
     shiftRows(state);
-    //cout << "è¡Œå˜åŒ–ï¼š";
+    //cout << "ĞĞ±ä»¯£º";
     //printVector(state);
     mixColumns(state);
-    //cout << "åˆ—æ··æ·†ï¼š";
+    //cout << "ÁĞ»ìÏı£º";
     //printVector(state);
-    //cout << "å¯†é’¥1ï¼š";
+    //cout << "ÃÜÔ¿1£º";
     //printVector(Key[1]);
     for (int i = 0; i < 16; i++) {
         state[i] ^= Key[1][i];
     }
-    //cout << "ç¬¬ä¸€è®ºè½®å¯†é’¥åŠ :";
+    //cout << "µÚÒ»ÂÛÂÖÃÜÔ¿¼Ó:";
     //printVector(state);
-    // ç¬¬äºŒè½®
+    // µÚ¶şÂÖ
 
     state = substituteNibble(state);
-    //cout << "åŠå­—èŠ‚æ›¿æ¢ï¼š";
+    //cout << "°ë×Ö½ÚÌæ»»£º";
     //printVector(state);
     shiftRows(state);
-    //cout << "è¡Œå˜åŒ–ï¼š";
+    //cout << "ĞĞ±ä»¯£º";
     //printVector(state);
-    //cout << "å¯†é’¥2ï¼š";
+    //cout << "ÃÜÔ¿2£º";
     //printVector(Key[2]);
     for (int i = 0; i < 16; i++) {
         state[i] ^= Key[2][i];
     }
-    //cout << "ç¬¬äºŒè®ºè½®å¯†é’¥åŠ :";
+    //cout << "µÚ¶şÂÛÂÖÃÜÔ¿¼Ó:";
     //printVector(state);
     return state;
 }
@@ -236,18 +236,18 @@ vector<int> S_AES::encrypt(vector<int> plaintext, vector<int> key) {
 vector<int> S_AES::decrypt(vector<int> ciphertext, vector<int> key) {
     vector<int> state = ciphertext;
     vector<vector<int>>Key;
-    //cout << "å¯†æ–‡æ˜¯ï¼š"<<endl;
+    //cout << "ÃÜÎÄÊÇ£º"<<endl;
     //printVector(ciphertext);
     Key = keyExpansion(key);
-    // åˆå§‹è½®å¯†é’¥åŠ 
+    // ³õÊ¼ÂÖÃÜÔ¿¼Ó
     for (int i = 0; i < 16; i++) {
         state[i] ^= Key[2][i];
     }
-    //cout << "åˆå§‹è½®å¯†é’¥åŠ :";
+    //cout << "³õÊ¼ÂÖÃÜÔ¿¼Ó:";
     //printVector(state);
-    // ç¬¬ä¸€è½®é€†
+    // µÚÒ»ÂÖÄæ
     inverseShiftRows(state);
-    //cout << "è¡Œå˜åŒ–ï¼š";
+    //cout << "ĞĞ±ä»¯£º";
     //printVector(state);
     state = inverseSubstituteNibble(state);
     for (int i = 0; i < 16; i++) {
@@ -255,7 +255,7 @@ vector<int> S_AES::decrypt(vector<int> ciphertext, vector<int> key) {
     }
     inverseMixColumns(state);
 
-    // ç¬¬äºŒè½®é€†
+    // µÚ¶şÂÖÄæ
     inverseShiftRows(state);
     state = inverseSubstituteNibble(state);
     for (int i = 0; i < 16; i++) {
@@ -269,10 +269,10 @@ vector<int> S_AES::doubleEncrypt(vector<int> plaintext, vector<int> key) {
     vector<int> K1;
     vector<int> K2;
     for (int i = 0; i < 16; ++i) {
-        K1.push(key[i]);
+        K1.push_back(key[i]);
     }
     for (int i = 16; i < 32; ++i) {
-        K2.push(key[i]);
+        K2.push_back(key[i]);
     }
     return encrypt(encrypt(plaintext, K1), K2);
 }
@@ -281,10 +281,10 @@ vector<int> S_AES::doubleDecrypt(vector<int> ciphertext, vector<int> key) {
     vector<int> K1;
     vector<int> K2;
     for (int i = 0; i < 16; ++i) {
-        K1.push(key[i]);
+        K1.push_back(key[i]);
     }
     for (int i = 16; i < 32; ++i) {
-        K2.push(key[i]);
+        K2.push_back(key[i]);
     }
     return decrypt(decrypt(ciphertext, K2), K1);
 }
@@ -294,13 +294,13 @@ vector<int> S_AES::tripleEncrypt(vector<int> plaintext, vector<int> key) {
     vector<int> K2;
     vector<int> K3;
     for (int i = 0; i < 16; ++i) {
-        K1.push(key[i]);
+        K1.push_back(key[i]);
     }
     for (int i = 16; i < 32; ++i) {
-        K2.push(key[i]);
+        K2.push_back(key[i]);
     }
     for (int i = 32; i < 48; ++i) {
-        K3.push(key[i]);
+        K3.push_back(key[i]);
     }
     return encrypt(encrypt(encrypt(plaintext, K1), K2), K3);
 }
@@ -310,21 +310,21 @@ vector<int> S_AES::tripleDecrypt(vector<int> ciphertext, vector<int> key) {
     vector<int> K2;
     vector<int> K3;
     for (int i = 0; i < 16; ++i) {
-        K1.push(key[i]);
+        K1.push_back(key[i]);
     }
     for (int i = 16; i < 32; ++i) {
-        K2.push(key[i]);
+        K2.push_back(key[i]);
     }
     for (int i = 32; i < 48; ++i) {
-        K3.push(key[i]);
+        K3.push_back(key[i]);
     }
-    return decrypt(decrypt(decrypt(ciphertext, K2), K1), K3);
+    return decrypt(decrypt(decrypt(ciphertext, K3), K2), K1);
 }
 
 string S_AES::ASCIIEncrypt(string plaintext, vector<int> key) {
     string ciphertext = "";
     for (int i = 0; i < plaintext.size(); ++i) {
-        ciphertext += char(binaryVectorToDecimal(encrypt(hexToBinary(int(plaintext[i])), key)));
+        ciphertext += char(binaryVectorToDecimal(encrypt(hexToBinary(int(plaintext[i]), 16), key)));
     }
     return ciphertext;
 }

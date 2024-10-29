@@ -1,5 +1,5 @@
 //
-// Created by ç‹é•‡ä¸œ on 2024/10/22.
+// Created by ÍõÕò¶« on 2024/10/22.
 //
 
 #ifndef HOMEWORK2_S_AES_H
@@ -11,61 +11,61 @@ using namespace std;
 
 class S_AES {
 private:
-    // åŠå­—èŠ‚æ›¿ä»£è¡¨
+    // °ë×Ö½ÚÌæ´ú±í
     const  vector< vector<int>> sbox = {
             {0x9, 0x4, 0xA, 0xB},
             {0xD, 0x1, 0x8, 0x5},
             {0x6, 0x2, 0x0, 0x3},
             {0xC, 0xE, 0xF, 0x7}
     };
-    // é€†åŠå­—èŠ‚æ›¿ä»£è¡¨
+    // Äæ°ë×Ö½ÚÌæ´ú±í
     const vector<vector<int>> invSbox = {
             {0xA, 0x5, 0x9, 0xB},
             {0x1, 0x7, 0x8, 0xF},
             {0x6, 0x0, 0x2, 0x3},
             {0xC, 0x4, 0xD, 0xE}
     };
-    // è½®å¸¸æ•°
+    // ÂÖ³£Êı
     const vector<int>rocn1 = { 1,0,0,0,0,0,0,0 };
     const vector<int>rocn2 = { 0,0,1,1,0,0,0,0 };
 private:
-    vector<int> substituteNibble(vector<int> state);                    // æ›¿æ¢å‡½æ•°
-    vector<int> inverseSubstituteNibble(vector<int>state);              // é€†åŠå­—èŠ‚æ›¿ä»£å‡½æ•°
-    vector<int> shiftRows(vector<int>& state);                          // è¡Œç§»ä½å‡½æ•°
-    vector<int> inverseShiftRows(vector<int>& state);                   // é€†è¡Œç§»ä½å‡½æ•°
-    void mixColumns(vector<int>& state);                                // åˆ—æ··æ·†å‡½æ•°
-    void inverseMixColumns(vector<int>& state);                         // é€†åˆ—æ··æ·†å‡½æ•°
-    vector<int> RotNib(vector<int> state);                              // äº¤æ¢å‰å
-    vector<vector<int>> keyExpansion(vector<int> key);                  // å¯†é’¥æ‹“å±•å‡½æ•°
+    vector<int> substituteNibble(vector<int> state);                    // Ìæ»»º¯Êı
+    vector<int> inverseSubstituteNibble(vector<int>state);              // Äæ°ë×Ö½ÚÌæ´úº¯Êı
+    vector<int> shiftRows(vector<int>& state);                          // ĞĞÒÆÎ»º¯Êı
+    vector<int> inverseShiftRows(vector<int>& state);                   // ÄæĞĞÒÆÎ»º¯Êı
+    void mixColumns(vector<int>& state);                                // ÁĞ»ìÏıº¯Êı
+    void inverseMixColumns(vector<int>& state);                         // ÄæÁĞ»ìÏıº¯Êı
+    vector<int> RotNib(vector<int> state);                              // ½»»»Ç°ºó
+    vector<vector<int>> keyExpansion(vector<int> key);                  // ÃÜÔ¿ÍØÕ¹º¯Êı
 public:
-    friend vector<int> hexToBinary(int hexValue);                       // åå…­è¿›åˆ¶æ•°è½¬æ¢ä¸ºäºŒè¿›åˆ¶æ•°ç»„
-    friend int binaryVectorToDecimal(const vector<int>& binary);        // äºŒè¿›åˆ¶æ•°ç»„è½¬æ¢æˆåå…­è¿›åˆ¶
-    friend void printVector(const vector<int>& vec);                    // è¾“å‡ºvector
+    friend vector<int> hexToBinary(int hexValue, int size);                       // Ê®Áù½øÖÆÊı×ª»»Îª¶ş½øÖÆÊı×é
+    friend int binaryVectorToDecimal(const vector<int>& binary);        // ¶ş½øÖÆÊı×é×ª»»³ÉÊ®Áù½øÖÆ
+    friend void printVector(const vector<int>& vec);                    // Êä³övector
 public:
-    vector<int> ASCIIEncrypt(string plaintext, vector<int> key);        // ASCIIç¼–ç å­—ç¬¦ä¸²åŠ å¯†å‡½æ•°
-    vector<int> encrypt(vector<int> plaintext, vector<int> key);        // åŠ å¯†å‡½æ•°
-    vector<int> decrypt(vector<int> ciphertext, vector<int> key);       // è§£å¯†å‡½æ•°
-    vector<int> doubleEncrypt(vector<int> plaintext, vector<int> key);  // åŒé‡åŠ å¯†
-    vector<int> doubleDecrypt(vector<int> ciphertext, vector<int> key); // åŒé‡è§£å¯†
-    vector<int> tripleEncrypt(vector<int> plaintext, vector<int> key);  // ä¸‰é‡åŠ å¯†
-    vector<int> tripleDecrypt(vector<int> ciphertext, vector<int> key); // ä¸‰é‡è§£å¯†
+    string ASCIIEncrypt(string plaintext, vector<int> key);        // ASCII±àÂë×Ö·û´®¼ÓÃÜº¯Êı
+    vector<int> encrypt(vector<int> plaintext, vector<int> key);        // ¼ÓÃÜº¯Êı
+    vector<int> decrypt(vector<int> ciphertext, vector<int> key);       // ½âÃÜº¯Êı
+    vector<int> doubleEncrypt(vector<int> plaintext, vector<int> key);  // Ë«ÖØ¼ÓÃÜ
+    vector<int> doubleDecrypt(vector<int> ciphertext, vector<int> key); // Ë«ÖØ½âÃÜ
+    vector<int> tripleEncrypt(vector<int> plaintext, vector<int> key);  // ÈıÖØ¼ÓÃÜ
+    vector<int> tripleDecrypt(vector<int> ciphertext, vector<int> key); // ÈıÖØ½âÃÜ
 };
 
-vector<int> hexToBinary(int hexValue) {
+inline vector<int> hexToBinary(int hexValue, int size) {
     vector<int> binary;
     int temp = hexValue;
     while (temp > 0) {
         binary.push_back(temp % 2);
         temp /= 2;
     }
-    while (binary.size() < 4) {
+    while (binary.size() < size) {
         binary.push_back(0);
     }
     reverse(binary.begin(), binary.end());
     return binary;
 }
 
-int binaryVectorToDecimal(const vector<int>& binary) {
+inline int binaryVectorToDecimal(const vector<int>& binary) {
     int decimal = 0;
     int n = binary.size();
     for (int i = 0; i < n; ++i) {
@@ -74,7 +74,7 @@ int binaryVectorToDecimal(const vector<int>& binary) {
     return decimal;
 }
 
-void printVector(const vector<int>& vec) {
+inline void printVector(const vector<int>& vec) {
     cout << "[";
     for (size_t i = 0; i < vec.size(); ++i) {
         cout << vec[i];
@@ -86,18 +86,3 @@ void printVector(const vector<int>& vec) {
 }
 
 #endif //HOMEWORK2_S_AES_H
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
